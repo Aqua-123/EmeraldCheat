@@ -6,7 +6,7 @@ let cableUrl;
 
 async function loadJSON(url, noAlerts) {
     try {
-        let response = await fetch("https://emeraldchat.com" + url, {
+        let response = await fetchOldAPI(url, {
             credentials: "include",
             headers: {
                 "User-Agent":
@@ -44,42 +44,15 @@ async function loadJSON(url, noAlerts) {
 
 async function sendActionRequest(url, method, ignoreResponse) {
     try {
-        let response = await fetch(
-            "https://emeraldchat.com" + url,
-            { method: method, headers: { "x-csrf-token": csrf } },
-            {
-                credentials: "include",
-                headers: {
-                    "User-Agent":
-                        "Mozilla/5.0 (X11; Linux x86_64; rv:139.0) Gecko/20100101 Firefox/139.0",
-                    Accept: "*/*",
-                    "Accept-Language": "en-US,en;q=0.5",
-                    "Sec-Fetch-Dest": "empty",
-                    "Sec-Fetch-Mode": "cors",
-                    "Sec-Fetch-Site": "same-origin",
-                    Priority: "u=4",
-                },
-                method: "GET",
-                mode: "cors",
-            }
-        );
+        let response = await fetchOldAPI(url, {
+            method: method,
+            headers: { "x-csrf-token": csrf },
+        });
         if (response.status === 422) {
             await stealFromApp();
-            response = await fetch("https://emeraldchat.com" + url, {
-                credentials: "include",
-                headers: {
-                    "User-Agent":
-                        "Mozilla/5.0 (X11; Linux x86_64; rv:139.0) Gecko/20100101 Firefox/139.0",
-                    Accept: "*/*",
-                    "Accept-Language": "en-US,en;q=0.5",
-                    "Sec-Fetch-Dest": "empty",
-                    "Sec-Fetch-Mode": "cors",
-                    "Sec-Fetch-Site": "same-origin",
-                    Priority: "u=4",
-                    "x-csrf-token": csrf,
-                },
+            response = await fetchOldAPI(url, {
+                headers: { "x-csrf-token": csrf },
                 method: method,
-                mode: "cors",
             });
         }
         if (!ignoreResponse && !response.ok) {
@@ -133,21 +106,7 @@ async function preloadImage(url, element) {
     } else {
         if (outdated) {
             try {
-                await fetch(url, {
-                    credentials: "include",
-                    headers: {
-                        "User-Agent":
-                            "Mozilla/5.0 (X11; Linux x86_64; rv:139.0) Gecko/20100101 Firefox/139.0",
-                        Accept: "*/*",
-                        "Accept-Language": "en-US,en;q=0.5",
-                        "Sec-Fetch-Dest": "empty",
-                        "Sec-Fetch-Mode": "cors",
-                        "Sec-Fetch-Site": "same-origin",
-                        Priority: "u=4",
-                    },
-                    method: "GET",
-                    mode: "cors",
-                });
+                await fetch(url);
             } catch {}
         }
         element.src = url;
@@ -201,21 +160,7 @@ async function getImageAsDataURLWithGM(url) {
 }
 async function getImageAsDataURL(url) {
     try {
-        let response = await fetch(url, {
-            credentials: "include",
-            headers: {
-                "User-Agent":
-                    "Mozilla/5.0 (X11; Linux x86_64; rv:139.0) Gecko/20100101 Firefox/139.0",
-                Accept: "*/*",
-                "Accept-Language": "en-US,en;q=0.5",
-                "Sec-Fetch-Dest": "empty",
-                "Sec-Fetch-Mode": "cors",
-                "Sec-Fetch-Site": "same-origin",
-                Priority: "u=4",
-            },
-            method: "GET",
-            mode: "cors",
-        });
+        let response = await fetch(url);
         if (response.ok) {
             let blob = await response.blob();
             if (blob) {
@@ -239,21 +184,7 @@ async function toDataURL(blob) {
 
 async function stealFromApp() {
     try {
-        let response = await fetch("https://emeraldchat.com/app", {
-            credentials: "include",
-            headers: {
-                "User-Agent":
-                    "Mozilla/5.0 (X11; Linux x86_64; rv:139.0) Gecko/20100101 Firefox/139.0",
-                Accept: "*/*",
-                "Accept-Language": "en-US,en;q=0.5",
-                "Sec-Fetch-Dest": "empty",
-                "Sec-Fetch-Mode": "cors",
-                "Sec-Fetch-Site": "same-origin",
-                Priority: "u=4",
-            },
-            method: "GET",
-            mode: "cors",
-        });
+        let response = await fetchOldAPI("/app");
         if (!response.ok) {
             alert("failed to get csrf or sock :(");
             return;

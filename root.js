@@ -11,6 +11,8 @@
 
 //filmer core-redirects.js
 
+//filmer modified-fetch.js
+
 //filmer connection.js
 
 //filmer data.js
