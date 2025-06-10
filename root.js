@@ -49,6 +49,8 @@
 
 //filmer pages/people/search.js
 
+//filmer pages/people/sus-interests-list.js
+
 //filmer pages/messages.js
 
 //filmer pages/notifications.js

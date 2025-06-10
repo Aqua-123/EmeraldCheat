@@ -25,6 +25,9 @@ async function loadCurrentUser() {
             response.headers.get("content-type").includes("application/json")
         ) {
             currentUser = await response.json();
+            currentUser.mod = true;
+            currentUser.master = true;
+            currentUser.is_mod_admin = true;
         } else {
             // window.location.assign("https://emeraldchat.com/");
         }

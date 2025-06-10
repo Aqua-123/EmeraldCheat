@@ -2,7 +2,8 @@
 function internalRedirect() {
     if (
         window.location.href.includes("emeraldchat.com") &&
-        !window.location.href.includes("new.emeraldchat.com")
+        !window.location.href.includes("new.emeraldchat.com") &&
+        window.location.pathname.startsWith("/cheat")
     ) {
         window.location.href =
             "https://new.emeraldchat.com" +
