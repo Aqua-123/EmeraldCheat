@@ -1,6 +1,7 @@
 // ==UserScript==
 // @name        EmeraldCheat
 // @namespace   http://tampermonkey.net/
+// @match       https://new.emeraldchat.com/*
 // @match       https://emeraldchat.com/*
 // @version     3.1.2.[filmer timestamp]
 // @author      -
@@ -8,6 +9,7 @@
 // @description Full UI replacement for EmeraldChat. Open: https://emeraldchat.com/cheat
 // ==/UserScript==
 
+//filmer core-redirects.js
 
 //filmer connection.js
 
@@ -23,13 +25,11 @@
 
 //filmer ban.js
 
-
 //filmer pages/chat/1v1.js
 
 //filmer pages/chat/direct.js
 
 //filmer pages/chat/group.js
-
 
 //filmer pages/mod/queue.js
 
@@ -41,13 +41,11 @@
 
 //filmer pages/mod/videos.js
 
-
 //filmer pages/people/friends.js
 
 //filmer pages/people/user.js
 
 //filmer pages/people/search.js
-
 
 //filmer pages/messages.js
 

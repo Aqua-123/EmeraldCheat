@@ -6,8 +6,26 @@ let cableUrl;
 
 async function loadJSON(url, noAlerts) {
     try {
-        let response = await fetch(url);
-        if (response.status === 200 && response.headers.get("content-type") && response.headers.get("content-type").includes("application/json")) {
+        let response = await fetch("https://emeraldchat.com" + url, {
+            credentials: "include",
+            headers: {
+                "User-Agent":
+                    "Mozilla/5.0 (X11; Linux x86_64; rv:139.0) Gecko/20100101 Firefox/139.0",
+                Accept: "*/*",
+                "Accept-Language": "en-US,en;q=0.5",
+                "Sec-Fetch-Dest": "empty",
+                "Sec-Fetch-Mode": "cors",
+                "Sec-Fetch-Site": "same-origin",
+                Priority: "u=4",
+            },
+            method: "GET",
+            mode: "cors",
+        });
+        if (
+            response.status === 200 &&
+            response.headers.get("content-type") &&
+            response.headers.get("content-type").includes("application/json")
+        ) {
             return await response.json();
         } else if (!noAlerts) {
             switch (response.status) {
@@ -26,21 +44,58 @@ async function loadJSON(url, noAlerts) {
 
 async function sendActionRequest(url, method, ignoreResponse) {
     try {
-        let response = await fetch(url, {method: method, headers:{"x-csrf-token":csrf}});
+        let response = await fetch(
+            "https://emeraldchat.com" + url,
+            { method: method, headers: { "x-csrf-token": csrf } },
+            {
+                credentials: "include",
+                headers: {
+                    "User-Agent":
+                        "Mozilla/5.0 (X11; Linux x86_64; rv:139.0) Gecko/20100101 Firefox/139.0",
+                    Accept: "*/*",
+                    "Accept-Language": "en-US,en;q=0.5",
+                    "Sec-Fetch-Dest": "empty",
+                    "Sec-Fetch-Mode": "cors",
+                    "Sec-Fetch-Site": "same-origin",
+                    Priority: "u=4",
+                },
+                method: "GET",
+                mode: "cors",
+            }
+        );
         if (response.status === 422) {
             await stealFromApp();
-            response = await fetch(url, {method: method, headers:{"x-csrf-token":csrf}});
+            response = await fetch("https://emeraldchat.com" + url, {
+                credentials: "include",
+                headers: {
+                    "User-Agent":
+                        "Mozilla/5.0 (X11; Linux x86_64; rv:139.0) Gecko/20100101 Firefox/139.0",
+                    Accept: "*/*",
+                    "Accept-Language": "en-US,en;q=0.5",
+                    "Sec-Fetch-Dest": "empty",
+                    "Sec-Fetch-Mode": "cors",
+                    "Sec-Fetch-Site": "same-origin",
+                    Priority: "u=4",
+                    "x-csrf-token": csrf,
+                },
+                method: method,
+                mode: "cors",
+            });
         }
         if (!ignoreResponse && !response.ok) {
             alert("failed to perform action :(");
             return;
         }
-        if (response.status === 200 && response.headers.get("content-type") && response.headers.get("content-type").includes("application/json")) {
+        if (
+            response.status === 200 &&
+            response.headers.get("content-type") &&
+            response.headers.get("content-type").includes("application/json")
+        ) {
             return await response.json();
         } else if (response.status === 500) {
             return false;
         }
-    } catch { }
+    } catch {}
 }
 
 async function deletePictureCache() {
@@ -58,28 +113,52 @@ async function deleteExpiredPictures() {
 }
 
 async function preloadImage(url, element) {
-    if (!(url.includes("/rails/active_storage/blobs/redirect/") || url.includes("/rails/active_storage/representations/redirect/"))) {
+    if (
+        !(
+            url.includes("/rails/active_storage/blobs/redirect/") ||
+            url.includes("/rails/active_storage/representations/redirect/")
+        )
+    ) {
         element.src = url;
         return;
     }
     let tuple = await getDatabaseJSON("PictureDates", url);
-    let outdated = !tuple || (new Date() - new Date(tuple.timestamp) >= 432000000);
+    let outdated =
+        !tuple || new Date() - new Date(tuple.timestamp) >= 432000000;
     let time = outdated ? new Date() : new Date(tuple.timestamp);
-
     if (config.doNotPreloadProfilePictures) {
-        element.src = `${url}${url.includes("?") ? "&" : "?"}buster=${time.valueOf()}`;
+        element.src = `${url}${
+            url.includes("?") ? "&" : "?"
+        }buster=${time.valueOf()}`;
     } else {
         if (outdated) {
             try {
-                await fetch(url, {cache: "reload"});
+                await fetch(url, {
+                    credentials: "include",
+                    headers: {
+                        "User-Agent":
+                            "Mozilla/5.0 (X11; Linux x86_64; rv:139.0) Gecko/20100101 Firefox/139.0",
+                        Accept: "*/*",
+                        "Accept-Language": "en-US,en;q=0.5",
+                        "Sec-Fetch-Dest": "empty",
+                        "Sec-Fetch-Mode": "cors",
+                        "Sec-Fetch-Site": "same-origin",
+                        Priority: "u=4",
+                    },
+                    method: "GET",
+                    mode: "cors",
+                });
             } catch {}
         }
         element.src = url;
     }
 
     if (outdated) {
-        await setDatabaseJSON("PictureDates", { key: url, timestamp: time.toISOString() });
-    }    
+        await setDatabaseJSON("PictureDates", {
+            key: url,
+            timestamp: time.toISOString(),
+        });
+    }
 }
 
 async function loadImage(element, url) {
@@ -111,19 +190,32 @@ async function getImageAsDataURLWithGM(url) {
                     }
                     resolve(undefined);
                 },
-                onerror: function() {
+                onerror: function () {
                     resolve(undefined);
-                }
+                },
             });
         } catch {
             resolve(undefined);
         }
-    })
+    });
 }
-
 async function getImageAsDataURL(url) {
     try {
-        let response = await fetch(url);
+        let response = await fetch(url, {
+            credentials: "include",
+            headers: {
+                "User-Agent":
+                    "Mozilla/5.0 (X11; Linux x86_64; rv:139.0) Gecko/20100101 Firefox/139.0",
+                Accept: "*/*",
+                "Accept-Language": "en-US,en;q=0.5",
+                "Sec-Fetch-Dest": "empty",
+                "Sec-Fetch-Mode": "cors",
+                "Sec-Fetch-Site": "same-origin",
+                Priority: "u=4",
+            },
+            method: "GET",
+            mode: "cors",
+        });
         if (response.ok) {
             let blob = await response.blob();
             if (blob) {
@@ -133,30 +225,50 @@ async function getImageAsDataURL(url) {
                 }
             }
         }
-    } catch { }
+    } catch {}
 }
 
 async function toDataURL(blob) {
     return new Promise((resolve, reject) => {
-      const reader = new FileReader()
-      reader.onloadend = () => resolve(reader.result)
-      reader.onerror = reject
-      reader.readAsDataURL(blob)
+        const reader = new FileReader();
+        reader.onloadend = () => resolve(reader.result);
+        reader.onerror = reject;
+        reader.readAsDataURL(blob);
     });
 }
 
 async function stealFromApp() {
     try {
-        let response = await fetch("/app", { method:"GET", headers:{"Accept":"text/html"}, credentials:"include"});
+        let response = await fetch("https://emeraldchat.com/app", {
+            credentials: "include",
+            headers: {
+                "User-Agent":
+                    "Mozilla/5.0 (X11; Linux x86_64; rv:139.0) Gecko/20100101 Firefox/139.0",
+                Accept: "*/*",
+                "Accept-Language": "en-US,en;q=0.5",
+                "Sec-Fetch-Dest": "empty",
+                "Sec-Fetch-Mode": "cors",
+                "Sec-Fetch-Site": "same-origin",
+                Priority: "u=4",
+            },
+            method: "GET",
+            mode: "cors",
+        });
         if (!response.ok) {
             alert("failed to get csrf or sock :(");
             return;
         }
-        let parsedDocument = new DOMParser().parseFromString(await response.text(), "text/html")
-        csrf = parsedDocument.querySelector("meta[name='csrf-token']")?.getAttribute("content");
-        cableUrl = parsedDocument.querySelector("meta[name='action-cable-url']")?.getAttribute("content");
-        if (!csrf || !cableUrl)
-            alert("failed to get csrf or sock :(");
+        let parsedDocument = new DOMParser().parseFromString(
+            await response.text(),
+            "text/html"
+        );
+        csrf = parsedDocument
+            .querySelector("meta[name='csrf-token']")
+            ?.getAttribute("content");
+        cableUrl = parsedDocument
+            .querySelector("meta[name='action-cable-url']")
+            ?.getAttribute("content");
+        if (!csrf || !cableUrl) alert("failed to get csrf or sock :(");
     } catch {
         alert("failed to get csrf or sock :(");
     }
@@ -206,16 +318,16 @@ async function openSocket(onMessage, onConnect) {
                 sock.onopen = () => {
                     console.log(`${sockId} sock connected :)`);
                 };
-                sock.onerror = e => {
+                sock.onerror = (e) => {
                     console.error(`${sockId} sock error :(`, e);
                     failed = true;
                     reject(e);
                 };
-                sock.onclose = e => {
+                sock.onclose = (e) => {
                     reconnect();
                     resolve();
                 };
-                sock.onmessage = async e => {
+                sock.onmessage = async (e) => {
                     everSuccessful = true;
                     let message = JSON.parse(e.data);
                     if (message.type === "welcome") {
@@ -223,7 +335,10 @@ async function openSocket(onMessage, onConnect) {
                             await onConnect(send);
                         }
                         resolve();
-                    } else if (message.type === "disconnect" && message.reason === "unauthorized") {
+                    } else if (
+                        message.type === "disconnect" &&
+                        message.reason === "unauthorized"
+                    ) {
                         await stealFromApp();
                         reconnect();
                         resolve();
